@@ -118,6 +118,8 @@ export default function ChatApp() {
     }
   };
 
+  const hasMessages = messages.length > 0;
+
   return (
     <div className="flex h-screen" style={{ backgroundColor: "var(--color-bg-primary)" }}>
       <Sidebar
@@ -149,10 +151,10 @@ export default function ChatApp() {
           </p>
         </header>
 
-        {/* Messages */}
-        <div className="flex-1 overflow-y-auto p-4 chat-messages">
-          {messages.length === 0 && (
-            <div className="flex flex-col items-center justify-center h-full gap-4 text-center">
+        {/* Empty state: centered welcome + input */}
+        {!hasMessages && (
+          <div className="flex-1 flex flex-col items-center justify-center px-4">
+            <div className="flex flex-col items-center gap-4 text-center mb-8">
               <div className="text-5xl">{"\u{1F3E5}"}</div>
               <h2 className="text-xl font-semibold">Welcome to Wellness Crew</h2>
               <p
@@ -178,66 +180,83 @@ export default function ChatApp() {
                 ))}
               </div>
             </div>
-          )}
 
-          {messages.map((msg) => (
-            <MessageBubble key={msg.id} message={msg} />
-          ))}
+            {/* Centered input in empty state */}
+            <div className="w-full max-w-2xl">
+              <ChatInput onSend={handleSend} disabled={isLoading} />
+            </div>
+          </div>
+        )}
 
-          {/* Loading indicator */}
-          {isLoading && (
-            <div className="flex justify-start mb-4 gap-3">
-              <div
-                className="w-10 h-10 rounded-full flex items-center justify-center text-xl shrink-0"
-                style={{
-                  backgroundColor: "var(--color-bg-card)",
-                  border: "2px solid var(--color-border)",
-                }}
-              >
-                {"\u{1F914}"}
-              </div>
-              <div
-                className="rounded-2xl rounded-tl-sm px-4 py-3"
-                style={{ backgroundColor: "var(--color-bg-card)" }}
-              >
-                <div className="flex gap-1.5 items-center">
+        {/* Active state: messages + bottom input */}
+        {hasMessages && (
+          <>
+            {/* Messages */}
+            <div className="flex-1 overflow-y-auto p-4 chat-messages">
+              {messages.map((msg) => (
+                <MessageBubble key={msg.id} message={msg} />
+              ))}
+
+              {/* Loading indicator */}
+              {isLoading && (
+                <div className="flex justify-start mb-4 gap-3">
                   <div
-                    className="w-2 h-2 rounded-full animate-bounce"
-                    style={{ backgroundColor: "var(--color-text-secondary)", animationDelay: "0ms" }}
-                  />
+                    className="w-10 h-10 rounded-full flex items-center justify-center text-xl shrink-0"
+                    style={{
+                      backgroundColor: "var(--color-bg-card)",
+                      border: "2px solid var(--color-border)",
+                    }}
+                  >
+                    {"\u{1F914}"}
+                  </div>
                   <div
-                    className="w-2 h-2 rounded-full animate-bounce"
-                    style={{ backgroundColor: "var(--color-text-secondary)", animationDelay: "150ms" }}
-                  />
-                  <div
-                    className="w-2 h-2 rounded-full animate-bounce"
-                    style={{ backgroundColor: "var(--color-text-secondary)", animationDelay: "300ms" }}
-                  />
+                    className="rounded-2xl rounded-tl-sm px-4 py-3"
+                    style={{ backgroundColor: "var(--color-bg-card)" }}
+                  >
+                    <div className="flex gap-1.5 items-center">
+                      <div
+                        className="w-2 h-2 rounded-full animate-bounce"
+                        style={{ backgroundColor: "var(--color-text-secondary)", animationDelay: "0ms" }}
+                      />
+                      <div
+                        className="w-2 h-2 rounded-full animate-bounce"
+                        style={{ backgroundColor: "var(--color-text-secondary)", animationDelay: "150ms" }}
+                      />
+                      <div
+                        className="w-2 h-2 rounded-full animate-bounce"
+                        style={{ backgroundColor: "var(--color-text-secondary)", animationDelay: "300ms" }}
+                      />
+                    </div>
+                  </div>
                 </div>
+              )}
+
+              {/* Error message */}
+              {error && (
+                <div
+                  className="mx-auto max-w-lg rounded-lg px-4 py-3 text-sm mb-4"
+                  style={{
+                    backgroundColor: "rgba(255, 107, 107, 0.1)",
+                    border: "1px solid var(--color-doc)",
+                    color: "var(--color-doc)",
+                  }}
+                >
+                  <p className="font-semibold mb-1">Error</p>
+                  <p>{error}</p>
+                </div>
+              )}
+
+              <div ref={messagesEndRef} />
+            </div>
+
+            {/* Bottom input in active state */}
+            <div className="shrink-0 px-4 pb-4 pt-0">
+              <div className="max-w-2xl mx-auto">
+                <ChatInput onSend={handleSend} disabled={isLoading} />
               </div>
             </div>
-          )}
-
-          {/* Error message */}
-          {error && (
-            <div
-              className="mx-auto max-w-lg rounded-lg px-4 py-3 text-sm mb-4"
-              style={{
-                backgroundColor: "rgba(255, 107, 107, 0.1)",
-                border: "1px solid var(--color-doc)",
-                color: "var(--color-doc)",
-              }}
-            >
-              <p className="font-semibold mb-1">Error</p>
-              <p>{error}</p>
-            </div>
-          )}
-
-          <div ref={messagesEndRef} />
-        </div>
-
-        {/* Chat input */}
-        <ChatInput onSend={handleSend} disabled={isLoading} />
+          </>
+        )}
       </div>
     </div>
   );

@@ -45,10 +45,10 @@ export default function ChatInput({ onSend, disabled }: ChatInputProps) {
 
   return (
     <div
-      className="flex items-end gap-3 p-4 shrink-0"
+      className="flex items-end gap-3 rounded-2xl px-4 py-3"
       style={{
         backgroundColor: "var(--color-bg-secondary)",
-        borderTop: "1px solid var(--color-border)",
+        border: "1px solid var(--color-border)",
       }}
     >
       <textarea

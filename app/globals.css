@@ -16,6 +16,11 @@
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
 }
 
+html, body {
+  height: 100%;
+  overflow: hidden;
+}
+
 body {
   background: var(--color-bg-primary);
   color: var(--color-text-primary);

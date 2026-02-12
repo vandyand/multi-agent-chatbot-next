@@ -45,7 +45,7 @@ export default function ChatInput({ onSend, disabled }: ChatInputProps) {
 
   return (
     <div
-      className="flex items-end gap-3 p-4"
+      className="flex items-end gap-3 p-4 shrink-0"
       style={{
         backgroundColor: "var(--color-bg-secondary)",
         borderTop: "1px solid var(--color-border)",
